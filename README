@@ -1,0 +1,22 @@
+# Events App
+
+## Architecture
+MVVM + Repository + Hilt
+
+## Features
+- Offline caching (Room)
+- API integration (Retrofit)
+- Image caching (Glide)
+- Background sync (WorkManager)
+
+## Cache Strategy
+TTL = 10 minutes
+
+## Run Steps
+1. Open in Android Studio
+2. Sync Gradle
+3. Run app
+
+## Trade-offs
+- Used simple TTL instead of complex cache invalidation
+- Minimal UI for time constraint
