@@ -8,8 +8,11 @@ data class EventEntity(
     @PrimaryKey val id: String,
     val title: String,
     val location: String,
-    val time: String,
+    val lat: Double,
+    val lng: Double,
+    val time: Long,
     val imageUrl: String,
     val isBookmarked: Boolean = false,
+    val distance: Float = 0f,
     val lastUpdated: Long = System.currentTimeMillis()
 )
