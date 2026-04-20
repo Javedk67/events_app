@@ -1,22 +1,134 @@
-# Events App
+# 📍 Event Explorer App (MVVM + Room + Offline First)
 
-## Architecture
-MVVM + Repository + Hilt
+## 🚀 Overview
+This project demonstrates a modern Android MVVM architecture with offline-first design using Room, Repository pattern, and local JSON seeding.
 
-## Features
-- Offline caching (Room)
-- API integration (Retrofit)
-- Image caching (Glide)
-- Background sync (WorkManager)
+---
 
-## Cache Strategy
-TTL = 10 minutes
+## 🏗️ Architecture
 
-## Run Steps
-1. Open in Android Studio
-2. Sync Gradle
-3. Run app
+- MVVM (Model-View-ViewModel)
+- Repository Pattern
+- Single Source of Truth (Room DB)
+- Offline First Approach
 
-## Trade-offs
-- Used simple TTL instead of complex cache invalidation
-- Minimal UI for time constraint
+---
+
+## 📊 Features
+
+- Load events from local JSON (assets)
+- Persist data in Room Database
+- Bookmark / Remove Bookmark functionality
+- Live updates using Flow
+- Distance calculation using device location
+- Open event location in Google Maps
+- Image loading with Glide
+- Offline support
+- Clean architecture design
+
+---
+
+## 🔄 Data Flow
+
+1. App launches
+2. ViewModel requests data
+3. Repository checks Room DB
+4. If empty → loads JSON → inserts into DB
+5. Room emits data via Flow
+6. UI updates automatically
+
+---
+
+## ❤️ Bookmark System
+
+- Stored in separate `bookmarks` table
+- Toggle using Repository
+- UI updates automatically via Room Flow
+
+---
+
+## 📍 Location Features
+
+- Runtime location permission
+- Distance calculation (user → event)
+- Open Google Maps via deep link
+
+---
+
+## 🧠 Tech Stack
+
+- Kotlin
+- Room Database
+- MVVM Architecture
+- Coroutines + Flow
+- Hilt Dependency Injection
+- Glide
+- Google Maps Intent
+
+1.Sequence Diagram (App Startup Flow)
+User Opens App
+      │
+      ▼
+MainActivity.onCreate()
+      │
+      ▼
+ViewModel.getEvents()
+      │
+      ▼
+Repository.getEvents()
+      │
+      ▼
+DAO.checkEventCount()
+      │
+      ├─────────────── No Data ────────────────┐
+      │                                         │
+      ▼                                         ▼
+Load events.json                         Fetch from Room DB
+      │                                         │
+      ▼                                         │
+Insert into Room DB                           Emit Flow
+      │                                         │
+      └───────────────┬─────────────────────────┘
+                      ▼
+               Room emits data (Flow)
+                      │
+                      ▼
+               ViewModel receives list
+                      │
+                      ▼
+             UI observes & updates RecyclerView
+
+2. Architecture Diagram (MVVM + Clean Data Flow)
+                             ┌──────────────────────┐
+                             │      UI Layer        │
+                             │ Activity / Fragment  │
+                             │ RecyclerView / XML   │
+                             └─────────┬────────────┘
+                                       │
+                                       ▼
+                             ┌──────────────────────┐
+                             │     ViewModel        │
+                             │  State / LiveData    │
+                             └─────────┬────────────┘
+                                       │
+                                       ▼
+                             ┌──────────────────────┐
+                             │     Repository       │
+                             │ Single Source of Truth│
+                             └───────┬───────┬──────┘
+                                     │       │
+                     ┌───────────────┘       └───────────────┐
+                     ▼                                       ▼
+             ┌──────────────────┐                ┌────────────────────┐
+             │   Local DB       │                │   Local JSON       │
+             │   (Room)         │                │  assets/events.json│
+             │ Events + Bookmark │                │  Initial Seed Data │
+             └──────────────────┘                └────────────────────┘
+
+                     ▲
+                     │
+                     ▼
+             ┌────────────────────────┐
+             │   External Services    │
+             │ (Location / Maps API)  │
+             └────────────────────────┘
