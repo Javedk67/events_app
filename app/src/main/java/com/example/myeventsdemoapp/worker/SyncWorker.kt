@@ -24,7 +24,7 @@ class SyncWorker (
     override suspend fun doWork(): Result {
         return try {
 
-            repo.getEvents().first() // ✅ MUST collect flow
+            repo.getEvents().first()
             Result.success()
         } catch (e: Exception) {
             Result.retry()

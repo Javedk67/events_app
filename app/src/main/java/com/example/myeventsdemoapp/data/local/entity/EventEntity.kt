@@ -13,6 +13,5 @@ data class EventEntity(
     val time: Long,
     val imageUrl: String,
     val isBookmarked: Boolean = false,
-    val distance: Float = 0f,
     val lastUpdated: Long = System.currentTimeMillis()
 )

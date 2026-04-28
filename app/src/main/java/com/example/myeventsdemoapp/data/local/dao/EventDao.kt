@@ -1,10 +1,7 @@
 package com.example.myeventsdemoapp.data.local.dao
 
 import androidx.room.*
-import com.example.myeventsdemoapp.data.local.entity.BookmarkEntity
-import com.example.myeventsdemoapp.data.local.entity.Event
 import com.example.myeventsdemoapp.data.local.entity.EventEntity
-import kotlinx.coroutines.flow.Flow
 
 
 @Dao
@@ -15,16 +12,7 @@ interface EventDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(events: List<EventEntity>)
 
-    @Query("SELECT EXISTS(SELECT 1 FROM bookmarks WHERE eventId = :id)")
-    suspend fun isBookmarked(id: String): Boolean
+    @Query("UPDATE events SET isBookmarked = :value WHERE id = :id")
+    suspend fun updateBookmark(id: String, value: Boolean)
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun addBookmark(bookmark: BookmarkEntity)
-
-    @Query("DELETE FROM bookmarks WHERE eventId = :id")
-    suspend fun removeBookmark(id: String)
-
-    @Query("SELECT eventId FROM bookmarks")
-    suspend fun getBookMarksIds():List<String>
-   // fun getBookMarksIds(): Flow<List<String>>
 }

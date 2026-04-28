@@ -24,7 +24,7 @@ object DatabaseModule {
             AppDatabase::class.java,
             "events_db"
         )
-            .fallbackToDestructiveMigration() // for assignment simplicity
+            .fallbackToDestructiveMigration()
             .build()
     }
 

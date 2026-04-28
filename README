@@ -1,11 +1,11 @@
-# 📍 Event Explorer App (MVVM + Room + Offline First)
+# Event Explorer App (MVVM + Room + Offline First)
 
-## 🚀 Overview
-This project demonstrates a modern Android MVVM architecture with offline-first design using Room, Repository pattern, and local JSON seeding.
+##  Overview
+A mobile application that lists nearby events based on user location, allows bookmarking, and works offline with caching.
 
 ---
 
-## 🏗️ Architecture
+##  Architecture
 
 - MVVM (Model-View-ViewModel)
 - Repository Pattern
@@ -14,7 +14,7 @@ This project demonstrates a modern Android MVVM architecture with offline-first 
 
 ---
 
-## 📊 Features
+## Features
 
 - Load events from local JSON (assets)
 - Persist data in Room Database
@@ -28,26 +28,25 @@ This project demonstrates a modern Android MVVM architecture with offline-first 
 
 ---
 
-## 🔄 Data Flow
+##  Data Flow
 
 1. App launches
 2. ViewModel requests data
 3. Repository checks Room DB
-4. If empty → loads JSON → inserts into DB
+4. If empty → loads api → inserts into DB
 5. Room emits data via Flow
 6. UI updates automatically
 
 ---
 
-## ❤️ Bookmark System
+## ️Bookmark System
 
-- Stored in separate `bookmarks` table
 - Toggle using Repository
 - UI updates automatically via Room Flow
 
 ---
 
-## 📍 Location Features
+## Location Features
 
 - Runtime location permission
 - Distance calculation (user → event)
@@ -55,7 +54,7 @@ This project demonstrates a modern Android MVVM architecture with offline-first 
 
 ---
 
-## 🧠 Tech Stack
+## Tech Stack
 
 - Kotlin
 - Room Database
@@ -65,70 +64,52 @@ This project demonstrates a modern Android MVVM architecture with offline-first 
 - Glide
 - Google Maps Intent
 
+
+
 1.Sequence Diagram (App Startup Flow)
-User Opens App
-      │
-      ▼
-MainActivity.onCreate()
-      │
-      ▼
-ViewModel.getEvents()
-      │
-      ▼
+User opens app
+     ↓
+Request Location Permission
+     ↓
+User Allows
+     ↓
+Fetch Location
+     ↓
+ViewModel.setLocation()
+     ↓
+Trigger Flow
+     ↓
 Repository.getEvents()
-      │
-      ▼
-DAO.checkEventCount()
-      │
-      ├─────────────── No Data ────────────────┐
-      │                                         │
-      ▼                                         ▼
-Load events.json                         Fetch from Room DB
-      │                                         │
-      ▼                                         │
-Insert into Room DB                           Emit Flow
-      │                                         │
-      └───────────────┬─────────────────────────┘
-                      ▼
-               Room emits data (Flow)
-                      │
-                      ▼
-               ViewModel receives list
-                      │
-                      ▼
-             UI observes & updates RecyclerView
+     ↓
+Load from DB → emit
+     ↓
+Call API
+     ↓
+Preserve bookmarks
+     ↓
+Save to DB
+     ↓
+Emit updated list
+     ↓
+UI updates RecyclerView
 
 2. Architecture Diagram (MVVM + Clean Data Flow)
-                             ┌──────────────────────┐
-                             │      UI Layer        │
-                             │ Activity / Fragment  │
-                             │ RecyclerView / XML   │
-                             └─────────┬────────────┘
-                                       │
-                                       ▼
-                             ┌──────────────────────┐
-                             │     ViewModel        │
-                             │  State / LiveData    │
-                             └─────────┬────────────┘
-                                       │
-                                       ▼
-                             ┌──────────────────────┐
-                             │     Repository       │
-                             │ Single Source of Truth│
-                             └───────┬───────┬──────┘
-                                     │       │
-                     ┌───────────────┘       └───────────────┐
-                     ▼                                       ▼
-             ┌──────────────────┐                ┌────────────────────┐
-             │   Local DB       │                │   Local JSON       │
-             │   (Room)         │                │  assets/events.json│
-             │ Events + Bookmark │                │  Initial Seed Data │
-             └──────────────────┘                └────────────────────┘
-
-                     ▲
-                     │
-                     ▼
-             ┌────────────────────────┐
-             │   External Services    │
-             │ (Location / Maps API)  │
-             └────────────────────────┘
+                            ┌─────────────────────────────┐
+                            │        UI Layer             │
+                            │ Activity / Fragment        │
+                            └────────────┬────────────────┘
+                                         ↓
+                            ┌─────────────────────────────┐
+                            │       ViewModel (MVVM)      │
+                            │ StateFlow / LiveData        │
+                            └────────────┬────────────────┘
+                                         ↓
+                            ┌─────────────────────────────┐
+                            │       Repository            │
+                            │ (Single Source of Truth)    │
+                            └───────┬───────────┬─────────┘
+                                    ↓           ↓
+                            ┌──────────────┐   ┌──────────────┐
+                            │   Room DB    │   │   Retrofit   │
+                            │ (Local Data) │   │ (Remote API) │
+                            └──────────────┘   └──────────────┘

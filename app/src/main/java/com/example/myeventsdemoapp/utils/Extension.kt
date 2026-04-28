@@ -1,7 +1,6 @@
 package com.example.myeventsdemoapp.utils
 
 import android.location.Location
-import com.example.myeventsdemoapp.data.local.entity.BookmarkEntity
 import com.example.myeventsdemoapp.data.local.entity.Event
 import com.example.myeventsdemoapp.data.local.entity.EventEntity
 import java.text.SimpleDateFormat
@@ -20,41 +19,22 @@ fun distanceKm( lat1: Double?,
     return result[0] / 1000f
 }
 
-fun List<Event>.withDistance(userLat: Double, userLng: Double): List<Event> {
-    return map {
-        it.copy(
-            distance = distanceKm(
-                userLat,
-                userLng,
-                it.lat,
-                it.lng
-            )
-        )
-    }
-}
 
-fun Event.toEntity(): EventEntity {
+fun Event.toEntity(existing: EventEntity?): EventEntity {
     return EventEntity(
-        id, title, location, lat, lng, time, imageUrl,
-        isBookmarked, distance,
+        id = id,
+        title = title,
+        location = location,
+        lat = lat,
+        lng = lng,
+        time = time,
+        imageUrl = imageUrl,
+        isBookmarked = existing?.isBookmarked ?: false,
         lastUpdated = System.currentTimeMillis()
     )
 }
 
 fun EventEntity.toDomain(): Event {
-    return Event(
-        id, title, location, lat, lng, time, imageUrl,
-        isBookmarked, distance,
-        lastUpdated = System.currentTimeMillis()
-    )
-}
-fun BookmarkEntity.toDomain(): BookmarkEntity {
-    return BookmarkEntity(
-        eventId
-    )
-}
-
-fun Event.toDomain(): Event {
     return Event(
         id = id,
         title = title,
@@ -63,8 +43,7 @@ fun Event.toDomain(): Event {
         lng = lng,
         time = time,
         imageUrl = imageUrl,
-        isBookmarked=isBookmarked, distance=distance,
-        lastUpdated = System.currentTimeMillis()
+        isBookmarked = isBookmarked
     )
 }
 fun formatTime(timestamp: Long): String {

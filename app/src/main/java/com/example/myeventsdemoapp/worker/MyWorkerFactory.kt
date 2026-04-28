@@ -16,7 +16,7 @@ class MyWorkerFactory(
         workerClassName: String,
         workerParameters: WorkerParameters
     ): ListenableWorker? {
-        Log.d("WorkerFactory", "Requested: $workerClassName")
+
         return when (workerClassName) {
             SyncWorker::class.java.name ->
                 SyncWorker(appContext, workerParameters, repo)

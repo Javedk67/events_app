@@ -5,12 +5,11 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.Uri
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -24,8 +23,6 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.collectLatest
-import kotlinx.coroutines.launch
 import java.util.concurrent.TimeUnit
 
 @AndroidEntryPoint
@@ -41,12 +38,11 @@ class MainActivity : AppCompatActivity() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
 
-        // Set content view
+
         setContentView(binding.root)
         // WorkManager
-
         val workRequest = PeriodicWorkRequestBuilder<SyncWorker>(
-            6, TimeUnit.HOURS // ✅ low frequency
+            6, TimeUnit.HOURS
         )
             .setConstraints(
                 Constraints.Builder()
@@ -69,8 +65,8 @@ class MainActivity : AppCompatActivity() {
         requestLocationPermission()
 
         var adapter = EventAdapter(
-            onBookmark = { event,isMark->
-                vm.toggle(event,isMark)
+            onBookmark = { event->
+                vm.toggle(event)
                          },
             onClick = { openMap(it.lat, it.lng) }
         )
@@ -90,15 +86,6 @@ class MainActivity : AppCompatActivity() {
             }
 
 
-
-
-
-        lifecycleScope.launch {
-//
-            vm.bookmarkedIds.collect { ids ->
-                adapter.setBookmarkedIds(ids)
-                Log.d("//////","isBookmarked"+ids)}
-        }
 
     }
     private fun openMap(lat: Double, lng: Double) {
@@ -148,11 +135,7 @@ class MainActivity : AppCompatActivity() {
                 if (location != null) {
                     userLat = location.latitude
                     userLng = location.longitude
-                    vm.setLocation(userLat!!, userLng!!)
-//                    lifecycleScope.launch {
-//                        vm.location.collect { (lat,lng)-> }
-//                    }
-
+                    vm.setLocation(userLat!!,userLng!!)
                 }
             }
     }

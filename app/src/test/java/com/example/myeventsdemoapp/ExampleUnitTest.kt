@@ -16,33 +16,25 @@ class ExampleUnitTest {
     }
     @Test
     fun toggle_bookmark_should_add_when_not_bookmarked() {
+        val isBookmarked = false
 
-        var isBookmarked = false
+        val updated = !isBookmarked
 
-        // toggle logic
-        isBookmarked = !isBookmarked
-
-        assertEquals(true, isBookmarked)
+        assertTrue(updated)
     }
+
     @Test
     fun toggle_bookmark_should_remove_when_bookmarked() {
+        val isBookmarked = true
 
-        var isBookmarked = true
+        val updated = !isBookmarked
 
-        // toggle logic
-        isBookmarked = !isBookmarked
-
-        assertEquals(false, isBookmarked)
+        assertFalse(updated)
     }
-
     @Test
-    fun json_data_should_not_be_empty() {
+    fun events_list_should_not_be_empty() {
+        val events = listOf("Music Festival", "Tech Meetup")
 
-        val events = listOf(
-            "Music Festival",
-            "Tech Meetup"
-        )
-
-        assertEquals(false, events.isEmpty())
+        assertTrue(events.isNotEmpty())
     }
 }
